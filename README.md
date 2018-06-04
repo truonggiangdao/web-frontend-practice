@@ -2,7 +2,7 @@
 This repo holding basic practices test for frontend devs
 
 ## TEST-1: Basic `HTML/CSS/JS + Bootstrap`
-![Screenshot](https://github.com/truonggiangdao/web-frontend-practice/img/screenshot.jpg)
+![Screenshot](https://github.com/truonggiangdao/web-frontend-practice/blob/master/img/screenshot.jpg)
 
 Technology requirements:
 - HTML5
