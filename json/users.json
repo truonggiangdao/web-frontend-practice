@@ -1,0 +1,42 @@
+[
+  {
+    "id": "jaksdk934hfd634",
+    "email": "testing@test.com",
+    "password": "123456",
+    "profile": {
+      "firstName": "Testing",
+      "lastName": "User",
+      "avatar": "img/female.png"
+    }
+  },
+  {
+    "id": "kfhbjvdbh6he8f3",
+    "email": "sample@sample.com",
+    "password": "Abcd@1234",
+    "profile": {
+      "firstName": "Sample",
+      "lastName": "User",
+      "avatar": "img/male.png"
+    }
+  },
+  {
+    "id": "dgfhybhe73ht33gf",
+    "email": "testing2@test.com",
+    "password": "Aa,123456",
+    "profile": {
+      "firstName": "Testing",
+      "lastName": "User",
+      "avatar": "img/female.png"
+    }
+  },
+  {
+    "id": "8hjvhdf4wdedfg80",
+    "email": "sample2@sample.com",
+    "password": "@Abcd1234",
+    "profile": {
+      "firstName": "Sample",
+      "lastName": "User",
+      "avatar": "img/male.png"
+    }
+  }
+]
