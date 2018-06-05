@@ -16,12 +16,14 @@
 </head>
 <body>
   <div class="header">
-    <div class="row title">
+    <div class="row title bg-success">
       <div class="col">
         <img src="img/logo.png" class="logo" width="100" height="64">
       </div>
       <div class="col">
-        <h3 class="title-text">Sign In</h3>
+        <h3 class="title-text" id="message">
+          <button id="modalLogin" class="btn btn-primary" data-toggle="modal" data-target="#loginModal">Login</button>
+        </h3>
       </div>
     </div>
   </div>
@@ -41,9 +43,15 @@
   <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
-
   <script>
     $(function() {
+      //Handle click Login
+      $("#btnLogin").on('click',function () { 
+      var email = $("#txtEmail").val();
+      var pass = $("#txtPwd").val();
+      var modal= $("#message");
+      var thongbao= $("#thongbao");
+      thongbao.html("");
       let json = null;
       $.ajax ({
         'async': false,
@@ -51,15 +59,69 @@
         'url': "json/users.json",
         'dataType': "json",
         'success': function (data) {
-          json = data;
-          $.each( json, function( i, item ) {
-            console.log(item.id);
+         json = data;
+         $.each( json, function( i, item ) {
+           console.log(item.profile.firstName);
+           if(email==item.email && pass==item.password){ 
+            thongbao.html("");
+              $("#loginModal").modal("hide");
+              modal.html("Hello, " + item.profile.firstName + ` <button id="btnLogOut" class="btn btn-warning btn-sm">Log out</button>`);
+              return true;
+            }
+            else{
+              thongbao.html("Wrong email or password").css("color","red");
+            }     
           });
         }
       });
-      return json;
-
+      //Handle click Logout
+      $("#btnLogOut").on('click',function(){
+        var crm = confirm("Bạn có chắc đăng xuất");
+        if(crm){
+          modal.html(`<button id="modalLogin" class="btn btn-primary" data-toggle="modal" data-target="#loginModal">Login</button>`);
+          $("#modalLogin").on('click',function(){
+          var email = $("#txtEmail").val("");
+          var pass = $("#txtPwd").val("");
+          thongbao.html("");
+      });
+          return true;
+        }
+        else{
+          return false;
+        }
+      });
+      //End handle click logout
+      return json; 
+      });
+     
     });
   </script>
+
+  <!-- Modal Login-->
+<div class="modal fade" id="loginModal" role="dialog" >
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-light ">
+        <h5 class="m-auto">Login</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p id="thongbao"></p>
+        <div class="form-group">
+          <input type="email" class="form-control" name="txtEmail" id="txtEmail"  placeholder="Email....." >
+        </div>
+        <div class="form-group">
+          <input type="password" class="form-control" name="txtPwd" id="txtPwd"  placeholder="Password.....">
+        </div>
+        
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-primary" id="btnLogin" >Login</button>
+      </div>
+    </div>
+  </div>
+</div>
 </body>
 </html>
