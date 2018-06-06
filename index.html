@@ -16,21 +16,27 @@
 </head>
 <body>
   <div class="header">
-    <div class="row title bg-success">
+    <div class="row title">
       <div class="col">
-        <img src="img/logo.png" class="logo" width="100" height="64">
+        <img src="img/logo.png" class="logo img-fluid" width="100" height="64">
       </div>
       <div class="col">
-        <h3 class="title-text" id="message">
-          <button id="modalLogin" class="btn btn-primary" data-toggle="modal" data-target="#loginModal">Login</button>
-        </h3>
+            <h6 class="title-text" id="message">
+                  <button id="modalLogin" class="btn btn-primary ml-auto" data-toggle="modal" data-target="#loginModal">Login</button>
+            </h6>
       </div>
     </div>
   </div>
-  <div class="main">
-    <div class="wrapper-login"></div>
+  <div class="main ">
+    <div class="wrapper-login">
+      <div class="row">
+        <div class="col">
+            <h2 class="txtWelcome pt-5 text-center">Welcome!</h2>
+        </div>
+      </div>
+      
+    </div>
     <div class="wrapper-profile"></div>
-
   </div>
   <div class="footer">
     <div class="">
@@ -49,7 +55,7 @@
       $("#btnLogin").on('click',function () { 
       var email = $("#txtEmail").val();
       var pass = $("#txtPwd").val();
-      var modal= $("#message");
+      var hello= $("#message");
       var thongbao= $("#thongbao");
       thongbao.html("");
       let json = null;
@@ -61,11 +67,10 @@
         'success': function (data) {
          json = data;
          $.each( json, function( i, item ) {
-           console.log(item.profile.firstName);
            if(email==item.email && pass==item.password){ 
-            thongbao.html("");
+              thongbao.html("");
               $("#loginModal").modal("hide");
-              modal.html("Hello, " + item.profile.firstName + ` <button id="btnLogOut" class="btn btn-warning btn-sm">Log out</button>`);
+              hello.html("<span>Hello, " + item.profile.firstName  + "</span>" + ` <button id="btnLogOut" class="btn btn-warning btn-sm">Log out</button>`);
               return true;
             }
             else{
@@ -78,7 +83,7 @@
       $("#btnLogOut").on('click',function(){
         var crm = confirm("Bạn có chắc đăng xuất");
         if(crm){
-          modal.html(`<button id="modalLogin" class="btn btn-primary" data-toggle="modal" data-target="#loginModal">Login</button>`);
+          hello.html(`<button id="modalLogin" class="btn btn-primary" data-toggle="modal" data-target="#loginModal">Login</button>`);
           $("#modalLogin").on('click',function(){
           var email = $("#txtEmail").val("");
           var pass = $("#txtPwd").val("");

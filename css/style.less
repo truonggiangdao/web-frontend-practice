@@ -1,23 +1,23 @@
 @color_gray: #424242;
 @color_white: #ffffff;
 @bg-img: url("../img/bg.jpg");
-
+@spacers: 10px;
 .logo {
   padding: 0.5rem;
 }
 
-h3{
+h6{
   &.title-text {
     color: @color_white;
     text-align: right;
-    padding: 1rem 4rem 1rem 0;
+    padding: 1rem 0;
     margin: 0;
   }
 }
 
 .header {
   background-color: @color_gray;
-  height: 4rem;
+  //height: 4rem;
 
   .title {
     margin: 0
@@ -32,8 +32,12 @@ h3{
     background-repeat: no-repeat;
     height: 50rem;
     background-size: 1308px 500px;
+    //background-size: cover;
+    .txtWelcome{
+      color:white;
+    }
   }
-
+  
   .wrapper-profile {
     height: auto;
   }
@@ -48,7 +52,10 @@ h3{
 
     .wrapper-login {
       height: 30rem;
-      background-size: 600px 300px;
+      // background-size: 600px 300px;
+      background-size: cover !important;
+      background-repeat: no-repeat;
+      background-position: center;
     }
 
     .wrapper-profile {
@@ -63,10 +70,10 @@ h3{
 @media (max-width: 80rem) {
   .main{
     height: 100rem;
-
     .wrapper-login {
       height: 30rem;
       background-size: 800px 300px;
+      background-position: center;
     }
 
     .wrapper-profile {
@@ -84,7 +91,9 @@ h3{
 
     .wrapper-login {
       height: 30rem;
-      background-size: 1366px 300px;
+      background-size: 136rem 30rem;
+      // background-size: cover !important;
+      background-position: center;
     }
 
     .wrapper-profile {
@@ -94,5 +103,29 @@ h3{
 
   .footer {
   }
+}
+
+@media (min-width: 136.6rem) {
+  .main{
+    height: 100rem;
+    .wrapper-login {
+      height: 30rem;
+      background-size: 200rem 30rem;
+      // background-size: cover !important;
+      background-position: center;
+    }
+
+    .wrapper-profile {
+      height: auto;
+    }
+  }
+
+  .footer {
+  }
+}
+
+h2.txtWelcome
+{
+  padding-top: 220px !important;
 }
 
