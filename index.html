@@ -27,8 +27,24 @@
   </div>
   <div class="main">
     <div class="wrapper-login"></div>
-    <div class="wrapper-profile"></div>
-
+    <div class="wrapper-profile col-md-4">
+      <div id="myCarousel" class="carousel slide" data-ride="carousel">
+        <div id="images" class="carousel-inner">
+          <!--<div class="row">-->
+            <!--<div class="col-6"><a href="#"><img class="img-responsive" src="img/female.png"></a></div>-->
+            <!--<div class="col-6"><a href="#"><img class="img-responsive" src="img/female.png"></a></div>-->
+          <!--</div>-->
+        </div>
+        <a class="carousel-control-prev" href="#myCarousel" role="button" data-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#myCarousel" role="button" data-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="sr-only">Next</span>
+        </a>
+      </div>
+    </div>
   </div>
   <div class="footer">
     <div class="">
@@ -44,21 +60,40 @@
 
   <script>
     $(function() {
-      let json = null;
+      let users = null;
       $.ajax ({
         'async': false,
         'global': false,
         'url': "json/users.json",
         'dataType': "json",
         'success': function (data) {
-          json = data;
-          $.each( json, function( i, item ) {
-            console.log(item.id);
+          users = data;
+
+          // $('#images').addClass("d-block img-fluid");
+          $.each( users, function( i, item ) {
+            $('<div class="carousel-item row">'
+              + '<div class="col-6">'
+                + '<a href="#">' + ('<img class="img-responsive" src="' + item.profile.avatar + '" />') + '</a>'
+              + '</div>'
+            + '</div>').appendTo( "#images" );
+            if (i === 0) {
+              $('.carousel-item').addClass("active");
+            }
+          });
+
+          $('#myCarousel').carousel({
+            interval: 5000
+          });
+
+          $('.carousel .carousel-item').each(function(){
+            let next = $(this).next();
+            if (!next.length) {
+              next = $(this).siblings(':first');
+            }
+            next.children(':first-child').clone().appendTo($(this));
           });
         }
       });
-      return json;
-
     });
   </script>
 </body>

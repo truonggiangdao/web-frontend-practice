@@ -34,8 +34,26 @@ h3{
     background-size: 1308px 500px;
   }
 
+  .img-responsive {
+    display: block;
+    height: auto;
+    max-width: 100%;
+  }
+  img {
+    vertical-align: middle;
+  }
+  img {
+    border: 0;
+  }
+
   .wrapper-profile {
     height: auto;
+    background-color: cornflowerblue;
+
+    .carousel-inner .active.left { left: -50%; }
+    .carousel-inner .next        { left:  50%; }
+    .carousel-inner .prev        { left: -50%; }
+    .carousel-control-prev,.carousel-control-next {background-image:none;}
   }
 }
 
