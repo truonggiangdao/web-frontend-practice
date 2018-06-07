@@ -27,7 +27,7 @@
   </div>
   <div class="main">
     <div class="wrapper-login"></div>
-    <div class="wrapper-profile col-md-6">
+    <div class="wrapper-profile d-flex justify-content-center col-md-10 col-sm-6">
       <div id="myCarousel" class="carousel slide" data-ride="carousel">
         <div id="images" class="carousel-inner"></div>
         <a class="carousel-control-prev" href="#myCarousel" role="button" data-slide="prev">
@@ -78,13 +78,13 @@
                 + '<a href="#">'
                 + ('<img class="img-responsive img-profile" src="' + showUser[i + 1].profile.avatar + '" />')
                 + '</a>'
-                + '<h5>' + '<a href="#">' + showUser[i + 1].profile.firstName + ' ' + showUser[i + 1].profile.lastName + '</a>' + '</h5>'
+                + '<h5 class="text-name">' + '<a href="#">' + showUser[i + 1].profile.firstName + ' ' + showUser[i + 1].profile.lastName + '</a>' + '</h5>'
                 + '</div>'
                 + '<div class="col-6">'
                 + '<a href="#">'
                 + ('<img class="img-responsive img-profile" src="' + showUser[i + 2].profile.avatar + '" />')
                 + '</a>'
-                + '<h5>' + '<a href="#">' + showUser[i + 2].profile.firstName + ' ' + showUser[i + 2].profile.lastName + '</a>' + '</h5>'
+                + '<h5 class="text-name">' + '<a href="#">' + showUser[i + 2].profile.firstName + ' ' + showUser[i + 2].profile.lastName + '</a>' + '</h5>'
                 + '</div>'
                 + '</div>'
                 + '</div>').appendTo( "#images" );
@@ -95,18 +95,17 @@
                 + '<a href="#">'
                 + ('<img class="img-responsive img-profile" src="' + showUser[i + 1].profile.avatar + '" />')
                 + '</a>'
-                + '<h5>' + '<a href="#">' + showUser[i + 1].profile.firstName + ' ' + showUser[i + 1].profile.lastName + '</a>' + '</h5>'
+                + '<h5 class="text-name">' + '<a href="#">' + showUser[i + 1].profile.firstName + ' ' + showUser[i + 1].profile.lastName + '</a>' + '</h5>'
                 + '</div>'
                 + '<div class="col-6">'
                 + '<a href="#">'
                 + ('<img class="img-responsive img-profile" src="' + showUser[0].profile.avatar + '" />')
                 + '</a>'
-                + '<h5>' + '<a href="#">' + showUser[0].profile.firstName + ' ' + showUser[0].profile.lastName + '</a>' + '</h5>'
+                + '<h5 class="text-name">' + '<a href="#">' + showUser[0].profile.firstName + ' ' + showUser[0].profile.lastName + '</a>' + '</h5>'
                 + '</div>'
                 + '</div>'
                 + '</div>').appendTo( "#images" );
             }
-
 
             if (i === 0) {
               $('.carousel-item').addClass("active");
