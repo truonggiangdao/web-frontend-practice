@@ -4,7 +4,7 @@
     "email": "testing@test.com",
     "password": "123456",
     "profile": {
-      "firstName": "Testing",
+      "firstName": "Testing1",
       "lastName": "User",
       "avatar": "img/female.png"
     }
@@ -14,7 +14,7 @@
     "email": "sample@sample.com",
     "password": "Abcd@1234",
     "profile": {
-      "firstName": "Sample",
+      "firstName": "Sample2",
       "lastName": "User",
       "avatar": "img/male.png"
     }
@@ -24,7 +24,7 @@
     "email": "testing2@test.com",
     "password": "Aa,123456",
     "profile": {
-      "firstName": "Testing",
+      "firstName": "Testing3",
       "lastName": "User",
       "avatar": "img/female.png"
     }
@@ -34,7 +34,7 @@
     "email": "sample2@sample.com",
     "password": "@Abcd1234",
     "profile": {
-      "firstName": "Sample",
+      "firstName": "Sample4",
       "lastName": "User",
       "avatar": "img/male.png"
     }
