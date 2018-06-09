@@ -73,14 +73,13 @@
     <div class="wrapper-login">
       <div class="row">
         <div class="col">
-          <h2 class="txtWelcome pt-5 text-center">Welcome!</h2>
+          <h2 class="txtWelcome pt-5 text-center" id="welcome">Welcome!</h2>
         </div>
       </div>
 
     </div>
     <div class="wrapper-profile">
-      <img id="modalEdit" class="rounded img-fluid img-thumbnail" alt="User1">
-      <img id="modalEdit2" class="rounded img-fluid img-thumbnail" alt="User2">
+      <div id="image"></div>
     </div>
   </div>
   <div class="footer">
@@ -99,39 +98,39 @@
   <script src="Cookies.js"></script>
   <script>
     $(function () {
-      //Get avatar
-      $.ajax({
-        'async': false,
-        'global': false,
-        'url': "json/users.json",
-        'dataType': "json",
-        'success': function (data) {
-          json = data;
-          $.each(json, function (i, item) {
-            $("#modalEdit").attr("src", json[0].profile.avatar).css("cursor", "pointer");
-            $("#modalEdit2").attr("src", json[1].profile.avatar).css("cursor", "pointer");
-          });
+      idCurrentUser=null;
+      function showPopupLogin(){
+        $("#modalLogin").on('click', function () {
+          $("#txtEmail").val();
+          $("#txtPwd").val();
+          $("#txtID").val();
+          $("#txtID2").val();
+          $("#loginModal").modal('show');
+        });
+      }
+      showPopupLogin();
+      //Show slider
+      let idImage=null;
+      $.getJSON( "json/users.json", function( data ) {
+       let json=data;
+       for(let i = 0 ; i < json.length;++i){
+          idImage = $(
+          '<img id="'+json[i].id+'" class="img-responsive img-profile" src="' + json[i].profile.avatar + '" />'
+          // +('<img id="img2" class="img-responsive img-profile" src="' + json[1].profile.avatar + '" />')
+          ).appendTo( "#image" );
+          console.log("img "+ i + " : : " + idImage[0].id);
         }
       });
-      //End getavatar
-
-      //Xu ly popup login
-      $("#modalLogin").on('click', function () {
-        $("#txtEmail").val();
-        $("#txtPwd").val();
-        $("#txtID").val();
-        $("#txtID2").val();
-        $("#loginModal").modal('show');
-      });
-
+      
+      //End show slider
+     
       //Handle click Login
-      $("#btnLogin").on('click', function () {
+      $("#btnLogin").on('click', function (){
         var email = $("#txtEmail").val();
         var pass = $("#txtPwd").val();
         var currentUser = "";
         var hello = $("#message");
-        var thongbao = $("#thongbao");
-        thongbao.html();
+        var notice = $("#notice");
         let json = null;
         $.ajax({
           'async': false,
@@ -140,201 +139,75 @@
           'dataType': "json",
           'success': function (data) {
             json = data;
-            $.each(json, function (i, item) {
-              if (email == item.email && pass == item.password) { //Check login success
-                setCookie("email", email);
-                setCookie("pass", pass);
-                setCookie("currentUser", item.id);
-
-                var emailCookie = getCookie("email"); //txtEail
-                var passCookie = getCookie("pass"); //txtPassword
-                var idCookie = getCookie("currentUser"); //id user login
-
-                thongbao.html("");
+            for(let i =0; i < json.length;++i) {
+              if (email == json[i].email && pass == json[i].password){
+                 idCurrentUser=json[i].id;
+                console.log("Id when login : " + idCurrentUser);
+                notice.html("");
                 $("#loginModal").modal("hide");
-                hello.html("<span>Hello, " + item.profile.firstName + "</span>" +
-                  ` <button id="btnLogOut" class="btn btn-warning btn-sm">Log out</button>`);
-
-                var idUser = $("#txtID").val("jaksdk934hfd634"); //Set ID for user1
-                setCookie("user1", idUser.val());
-                var idUser2 = $("#txtID2").val("8hjvhdf4wdedfg80"); //Set ID for user
-                setCookie("user2", idUser2.val());
-
-                var idUserValue = getCookie("user1"); //Get ID for user1
-                var idUserValue2 = getCookie("user2"); //Get ID for user2
+                hello.html("<span>Hello, " + json[i].profile.firstName + "</span>" + " <button id='btnLogOut' class='btn btn-warning btn-sm'>Log out</button>");
                 //Check ID user after login and ID of User
-                if (idCookie == idUserValue) {
-                  $("#modalEdit").on('click', function () {
-                    $("#txtID").val(item.id);
-                    $("#txtFN").val(item.profile.firstName);
-                    $("#txtLN").val(item.profile.lastName);
-                    $("#txtPwdEdit").val(item.password);
-                    $("#txtEmailEdit").val(item.email);
-                    $("#editModal").modal('show');
-                    $("editMOdal").modal('show');
-                  });
-                  $("#modalEdit2").on('click',function(){
-                    $("#editModal2").modal('hide');        
-                  });
-
-                } else if (idCookie == idUserValue2) {
-                  $("#modalEdit").on('click', function () {
-                    $("#txtFN").val("ABC");
-                    $("#txtLN").val("DEF");
-                    $("#txtPwdEdit").val("");
-                    $("#txtEmailEdit").val("");                 
-                  });
-                  $("#modalEdit2").on('click', function () {
-                    $("#txtID2").val(item.id);
-                    $("#txtFN2").val(item.profile.firstName);
-                    $("#txtLN2").val(item.profile.lastName);
-                    $("#txtPwdEdit2").val(item.password);
-                    $("#txtEmailEdit2").val(item.email);
-                    $("#editModal2").modal('show');
-                  });
-                } else {
-                  $("#modalEdit").on('click', function () {
-                    $("#editModal").modal('hide');
-                  });
-                  // $("#modalEdit2").on('click',function(){
-                  //   $("#editModal2").modal('hide');    
-                  // });
-                }
+                // if (idCurrentUser == idUserValue){
+                  $("img").on('click', function () {
+                    var IdEdit=$(this).attr("id");
+                    if(idCurrentUser==IdEdit){
+                      $("#noticeEdit").html("");
+                      $("#txtID").val(json[i].id);
+                      $("#txtFN").val(json[i].profile.firstName);
+                      $("#txtLN").val(json[i].profile.lastName);
+                      $("#txtPwdEdit").val(json[i].password);
+                      $("#txtEmailEdit").val(json[i].email);
+                      $("#editModal").modal('show');
+                    }
+                    else{
+                      return false;
+                    }
+                    });
                 return
-              } else {
-                thongbao.html("Wrong username or password");
               }
-
-            });
-
+          };
+          notice.html("Wrong username or password");
           }
         });
-        //Handle click Logout
+      //Handle click Logout
         $("#btnLogOut").on('click', function () {
           var crm = confirm("Bạn có chắc đăng xuất");
           if (crm) {
-              $("#modalEdit").on('click', function () {
-              $("#txtID").val("");
-              $("#txtFN").val("");
-              $("#txtLN").val("");
-              $("#txtPwdEdit").val("");
-              $("#txtEmailEdit").val("");
-              $("#txtCPwd").val("");
-            });
-            $("#modalEdit2").on('click', function () {
-              $("#txtID2").val("");
-              $("#txtFN2").val("");
-              $("#txtLN2").val("");
-              $("#txtPwdEdit2").val("");
-              $("#txtEmailEdit2").val("");
-              $("#txtCPwd2").val("");
-            });
-            // setCookie("email",email);
-            // setCookie("pass",pass);
-            // setCookie("currentUser",item.id);//Get User after login
-            // setCookie("user1",idUser.val());
-            // setCookie("user2",idUser2.val());
-            console.log("Info after logout: --------");
-            console.log("Id cookie out: " + getCookie("currentUser"));
-            console.log("Email cookie out: " + getCookie("email"));
-            console.log("pass cookie out: " + getCookie("pass"));
-            deleteCookie("currentUser");
-            deleteCookie("email");
-            deleteCookie("pass");
-            console.log("Info after delete cookie: --------");
-            console.log("Id cookie after delete: " + getCookie("currentUser"));
-            console.log("Email cookie after delete: " + getCookie("email"));
-            console.log("pass cookie after delete: " + getCookie("pass"));
-            // setCookie("currentUser",null)
-            // setCookie("email",null)
-            // setCookie("pass",null)
-            // console.log("Id cookie after set: " + getCookie("currentUser"));
-            // console.log("Email cookie after set: " + getCookie("email"));
-            // console.log("pass cookie after delete: " + getCookie("pass"));
-            // deleteCookie("user1");
-            // deleteCookie("user2");
+            idCurrentUser=null;
+            console.log("Id user after logout : " + idCurrentUser);
             hello.html(`<button id="modalLogin" class="btn btn-primary">Login</button>`);
-            $("#modalLogin").click(function () {
-              thongbao.html("");
-              $("txtEmail").html("");
-              $("#txtPwd").html("");
-              $("#loginModal").modal("show");
-              let json = null;
-              $.ajax({
-                'async': false,
-                'global': false,
-                'url': "json/users.json",
-                'dataType': "json",
-                'success': function (data) {
-                  json = data;
-                  $.each(json, function (i, item) {
-                    setCookie("email", email);
-                    setCookie("pass", pass);
-                    setCookie("currentUser", item.id);
-                    var getMail = getCookie("email");
-                    var getPwd = getCookie("pass");
-                    var getIdLogin = getCookie("currentUser");
-                    // console.log("Email la: " + getMail);
-                    // console.log("pass la: " + getPwd);
-                    // console.log("currentUser la: " + getIdLogin);
-                    // console.log("Info after out and click modal Login: --------");
-                    // console.log("Ajax email: " + email);
-                    // console.log("Ajax pass: " + pass);
-                    // console.log("Ajax id: " + item.id);
-                    // console.log("Ajax user1:" + getCookie("user1"));
-                    // console.log("Ajax user2:" + getCookie("user2"));
-                    //Check login again after log out
-                    if (getMail == item.mail && getPwd == item.password) {
-                      thongbao.html("");
-                      $("#loginModal").modal("hide");
-                      hello.html("<span>Hello, " + item.profile.firstName + "</span>" +
-                        ` <button id="btnLogOut" class="btn btn-warning btn-sm">Log out</button>`
-                      );
-                      if (getIdLogin == idUserValue) {
-                        $("#modalEdit").on('click', function () {
-                          $("#txtFN").val(item.profile.firstName);
-                          $("#txtLN").val(item.profile.lastName);
-                          $("#txtPwdEdit").val(item.password);
-                          $("#txtEmailEdit").val(item.email);
-                          $("#editModal").modal('show');
-                        });
-                        $("#modalEdit2").on('click', function () {
-                          $("#editModal2").modal('hide');
-                        });
-                      }
-                    }
-                  });
-                }
-              });
-            });
-          
+            showPopupLogin();
           } else {
             return false;
           }
         });
       });
       //End handle click Login
+
       //Handle edit profile
       $("#btnSave").on('click', function () {
-        var pass = $("#txtPwd").val();
         var txtFN = $("#txtFN").val();
         var txtLN = $("#txtLN").val();
         var txtPwd = $("#txtPwdEdit").val();
         var txtCPwd = $("#txtCPwd").val();
-        var txtID = $("#txtID").val();
-        var email = $("#txtEmail").val();
         var txtEmail = $("#txtEmailEdit").val();
-        var thongbaoEdit = $("#thongbaoEdit");
-        thongbaoEdit.html();
+        var noticeEdit = $("#noticeEdit");
         //Validate data form
         var re = /[0-9]/;
         if (txtFN.length < 4 || re.test(txtFN) || txtLN.length < 4 || re.test(txtLN)) {
-          thongbaoEdit.html("Invalid data");
+          noticeEdit.html("Invalid data");
         } else if (txtPwd != txtCPwd) {
-          thongbaoEdit.html("Mật khẩu không trùng khớp");
+          noticeEdit.html("Password not match matches");
         } else {
-          thongbaoEdit.html("");
+          noticeEdit.html("");
         }
+      $.getJSON( "json/users.json", function( data ) {
+       let json=data;
+       for(let i = 0 ; i < json.length;++i){
+         
+        }
+      });
+        //End validate data form
       });
       //End handle edit profile
     });
@@ -352,7 +225,7 @@
         </div>
         <div class="modal-body">
           <form id="frmLogin">
-            <p id="thongbao" class="text-center text-danger"></p>
+            <p id="notice" class="text-center text-danger"></p>
             <div class="form-group">
               <input type="email" class="form-control" name="txtEmail" id="txtEmail" placeholder="Email.....">
             </div>
@@ -368,7 +241,7 @@
     </div>
   </div>
   <!-- End div modal Login-->
-  <!-- Modal Edit 1-->
+  <!-- Modal Edit-->
   <div class="modal fade" id="editModal" role="dialog">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -380,10 +253,7 @@
         </div>
         <div class="modal-body">
           <form method="POST" id="my-profile">
-            <p id="thongbaoEdit" class="text-center text-danger"></p>
-            <div class="form-group">
-              <input type="text" class="form-control" name="txtID" id="txtID" readonly>
-            </div>
+            <p id="noticeEdit" class="text-center text-danger"></p>
             <div class="form-group">
               <input type="text" class="form-control" name="txtEmailEdit" id="txtEmailEdit" readonly>
             </div>
@@ -407,48 +277,9 @@
       </div>
     </div>
   </div>
-  <!-- End div modal edit 1-->
+  <!-- End div modal edit-->
 
-  <!-- Modal Edit 2-->
-  <div class="modal fade" id="editModal2">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header bg-secondary ">
-          <h5>Edit Profile</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <form method="POST">
-            <p id="thongbaoEdit2" class="text-center text-danger"></p>
-            <div class="form-group">
-              <input type="text" class="form-control" name="txtID2" id="txtID2" readonly>
-            </div>
-            <div class="form-group">
-              <input type="text" class="form-control" name="txtEmailEdit2" id="txtEmailEdit2" readonly>
-            </div>
-            <div class="form-group">
-              <input type="text" class="form-control" name="txtFN2" id="txtFN2" placeholder="First Name.....">
-            </div>
-            <div class="form-group">
-              <input type="text" class="form-control" name="txtLN2" id="txtLN2" placeholder="Last Name......">
-            </div>
-            <div class="form-group">
-              <input type="password" class="form-control" name="txtPwdEdit2" id="txtPwdEdit2" placeholder="Password.....">
-            </div>
-            <div class="form-group">
-              <input type="password" class="form-control" name="txtCPwd2" id="txtCPwd2" placeholder="Confirm Password.....">
-            </div>
-        </div>
-        </form>
-        <div class="modal-footer justify-content-center">
-          <button type="button" class="btn btn-primary" id="btnSave2">Save</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- End div modal Edit 2-->
+
 </body>
 
 </html>
