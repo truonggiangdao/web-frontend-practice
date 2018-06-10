@@ -40,6 +40,34 @@ h6{
   
   .wrapper-profile {
     height: auto;
+    background-color: cornflowerblue;
+    margin: auto;
+
+    .img-responsive {
+      margin: 2rem 5rem;
+      border-radius: 50%;
+    }
+    img {
+      &.img-profile {
+        border-radius: 50%;
+        width: 225px;
+        height: 225px;
+      }
+    }
+
+    h5 {
+      &.text-name {
+        text-align: center;
+      }
+    }
+
+    .carousel-inner .active.left { left: -50%; }
+    .carousel-inner .next        { left:  50%; }
+    .carousel-inner .prev        { left: -50%; }
+    .carousel-control-prev,.carousel-control-next {
+      background-image:none;
+      width: 5%;
+    }
   }
 }
 
@@ -128,8 +156,3 @@ h2.txtWelcome
 {
   padding-top: 220px !important;
 }
-//Avatar
-.displayblock{
-  display: block;
-}
-
