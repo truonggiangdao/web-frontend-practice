@@ -16,45 +16,6 @@
   <link rel="stylesheet/less" type="text/css" href="css/style.less" />
   <script src="//cdnjs.cloudflare.com/ajax/libs/less.js/3.0.2/less.min.js"></script>
 </head>
-<script type='text/javascript'>
-  //<![CDATA[
-
-  // Set cookie
-  function setCookie(cname, cvalue, exdays) {
-    var d = new Date();
-    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
-    var expires = "expires=" + d.toUTCString();
-    document.cookie = cname + "=" + cvalue + "; " + expires;
-  }
-
-  // Read cookie
-  function getCookie(cname) {
-    var name = cname + "=";
-    var ca = document.cookie.split(';');
-    for (var i = 0; i < ca.length; i++) {
-      var c = ca[i];
-      while (c.charAt(0) == ' ') {
-        c = c.substring(1);
-      }
-      if (c.indexOf(name) == 0) {
-        return c.substring(name.length, c.length);
-      }
-    }
-    return "";
-  }
-
-  //delete cookie
-  function deleteCookie(name, path, domain) {
-    if (getCookie(name)) {
-      document.cookie = name + "=" +
-        ((path == null) ? "" : "; path=" + path) +
-        ((domain == null) ? "" : "; domain=" + domain) +
-        "; expires=Thu, 01-Jan-70 00:00:01 GMT";
-    }
-  }
-
-  //]]>
-</script>
 
 <body>
   <div class="header">
@@ -70,13 +31,13 @@
     </div>
   </div>
   <div class="main ">
-      <div class="wrapper-login">
-          <div class="row">
-              <div class="col">
-                <h2 class="txtWelcome pt-5 text-center" id="welcome">Welcome!</h2>
-              </div>
-            </div>
+    <div class="wrapper-login">
+      <div class="row">
+        <div class="col">
+          <h2 class="txtWelcome pt-5 text-center" id="welcome">Welcome!</h2>
+        </div>
       </div>
+    </div>
     <div class="wrapper-profile d-flex justify-content-center col-md-10 col-sm-6">
       <div id="myCarousel" class="carousel slide" data-ride="carousel">
         <div id="images" class="carousel-inner"></div>
@@ -100,6 +61,7 @@
   <!-- Optional JavaScript -->
   <!-- jQuery first, then Popper.js, then Bootstrap JS -->
   <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ"
     crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
@@ -107,8 +69,12 @@
   <script src="Cookies.js"></script>
   <script>
     $(function () {
-      idCurrentUser=null;
-      function showPopupLogin(){
+      idCurrentUser = null;
+      infoUsers = null;
+    
+
+
+      function showPopupLogin() {
         $("#modalLogin").on('click', function () {
           $("#txtEmail").val();
           $("#txtPwd").val();
@@ -131,7 +97,7 @@
       //   }
       // });
       let users = null;
-      $.ajax ({
+      $.ajax({
         'async': false,
         'global': false,
         'url': "json/users.json",
@@ -139,47 +105,63 @@
         'success': function (data) {
           users = data;
           let showUser = [];
-          for(let i = 0; i < users.length;++i){
+          for (let i = 0; i < users.length; ++i) {
             showUser.push(users[i]);
             showUser.push(users[i]);
           }
-          for(let i = 0; i < showUser.length; i += 2) {
-            console.log("ShowUser:"  + showUser.length);
-            
-            if ((i + 2) < showUser.length){
-              $('<div class="carousel-item">'
-                + '<div class="row">'
-                + '<div class="col-6">'
-               
-                + ('<img id= "'+showUser[i + 1].id+'" class="img-responsive img-profile" src="' + showUser[i + 1].profile.avatar + '" />')
-              
-                + '<h5 class="text-name">' + '<a href="#">' + showUser[i + 1].profile.firstName + ' ' + showUser[i + 1].profile.lastName + '</a>' + '</h5>'
-                + '</div>'
-                + '<div class="col-6">'
-               
-                + ('<img id= "'+showUser[i + 2].id+'" class="img-responsive img-profile" src="' + showUser[i + 2].profile.avatar + '" />')
-           
-                + '<h5 class="text-name">' + '<a href="#">' + showUser[i + 2].profile.firstName + ' ' + showUser[i + 2].profile.lastName + '</a>' + '</h5>'
-                + '</div>'
-                + '</div>'
-                + '</div>').appendTo( "#images" );
+          for (let i = 0; i < showUser.length; i += 2) {
+            console.log("ShowUser:" + showUser.length);
+
+            if ((i + 2) < showUser.length) {
+              $('<div class="carousel-item">' +
+                '<div class="row">' +
+                '<div class="col-6">'
+
+                +
+                ('<img id= "' + showUser[i + 1].id + '" class="img-responsive img-profile" src="' +
+                  showUser[i + 1].profile.avatar + '" />')
+
+                +
+                '<h5 class="text-name">' + '<a href="#">' + showUser[i + 1].profile.firstName + ' ' +
+                showUser[i + 1].profile.lastName + '</a>' + '</h5>' +
+                '</div>' +
+                '<div class="col-6">'
+
+                +
+                ('<img id= "' + showUser[i + 2].id + '" class="img-responsive img-profile" src="' +
+                  showUser[i + 2].profile.avatar + '" />')
+
+                +
+                '<h5 class="text-name">' + '<a href="#">' + showUser[i + 2].profile.firstName + ' ' +
+                showUser[i + 2].profile.lastName + '</a>' + '</h5>' +
+                '</div>' +
+                '</div>' +
+                '</div>').appendTo("#images");
             } else {
-              $('<div class="carousel-item">'
-                + '<div class="row">'
-                + '<div class="col-6">'
-    
-                + ('<img id= "'+showUser[i + 1].id+'" class="img-responsive img-profile" src="' + showUser[i + 1].profile.avatar + '" />')
-           
-                + '<h5 class="text-name">' + '<a href="#">' + showUser[i + 1].profile.firstName + ' ' + showUser[i + 1].profile.lastName + '</a>' + '</h5>'
-                + '</div>'
-                + '<div class="col-6">'
-               
-                + ('<img id= "'+showUser[0].id+'" class="img-responsive img-profile" src="' + showUser[0].profile.avatar + '" />')
-            
-                + '<h5 class="text-name">' + '<a href="#">' + showUser[0].profile.firstName + ' ' + showUser[0].profile.lastName + '</a>' + '</h5>'
-                + '</div>'
-                + '</div>'
-                + '</div>').appendTo( "#images" );
+              $('<div class="carousel-item">' +
+                '<div class="row">' +
+                '<div class="col-6">'
+
+                +
+                ('<img id= "' + showUser[i + 1].id + '" class="img-responsive img-profile" src="' +
+                  showUser[i + 1].profile.avatar + '" />')
+
+                +
+                '<h5 class="text-name">' + '<a href="#">' + showUser[i + 1].profile.firstName + ' ' +
+                showUser[i + 1].profile.lastName + '</a>' + '</h5>' +
+                '</div>' +
+                '<div class="col-6">'
+
+                +
+                ('<img id= "' + showUser[0].id + '" class="img-responsive img-profile" src="' + showUser[0]
+                  .profile.avatar + '" />')
+
+                +
+                '<h5 class="text-name">' + '<a href="#">' + showUser[0].profile.firstName + ' ' + showUser[
+                  0].profile.lastName + '</a>' + '</h5>' +
+                '</div>' +
+                '</div>' +
+                '</div>').appendTo("#images");
             }
             if (i === 0) {
               $('.carousel-item').addClass("active");
@@ -191,9 +173,9 @@
         }
       });
       //End show slider
-     
+
       //Handle click Login
-      $("#btnLogin").on('click', function (){
+      $("#btnLogin").on('click', function () {
         var email = $("#txtEmail").val();
         var pass = $("#txtPwd").val();
         var currentUser = "";
@@ -207,42 +189,57 @@
           'dataType': "json",
           'success': function (data) {
             json = data;
-            for(let i =0; i < json.length;++i) {
-              if (email == json[i].email && pass == json[i].password){
-                 idCurrentUser=json[i].id;
+            for (let i = 0; i < json.length; ++i) {
+                infoUsers = {
+                  "id":  json[i].id,
+                  "email": json[i].email,
+                  "password": json[i].password,
+                  "profile": {
+                    "firstName": json[i].profile.firstName,
+                    "lastName": json[i].profile.lastName,
+                    "avatar": json[i].profile.avatar
+                  }
+                }
+                //console.log(infoUsers);
+                
+                //console.log(infoUsers);
+                infoUsers=JSON.parse(Cookies.get("info"))
+                if (email == infoUsers.email && pass == infoUsers.password) {
+                idCurrentUser=infoUsers.id;
                 console.log("Id when login : " + idCurrentUser);
                 notice.html("");
                 $("#loginModal").modal("hide");
-                hello.html("<span>Hello, " + json[i].profile.firstName + "</span>" + " <button id='btnLogOut' class='btn btn-warning btn-sm'>Log out</button>");
+                hello.html("<span>Hello, " + json[i].profile.firstName + "</span>" +
+                  " <button id='btnLogOut' class='btn btn-warning btn-sm'>Log out</button>");
                 //Check ID user after login and ID of User
                 // if (idCurrentUser == idUserValue){
-                  $("img").on('click', function () {
-                    var IdEdit=$(this).attr("id");
-                    if(idCurrentUser==IdEdit){
-                      $("#noticeEdit").html("");
-                      $("#txtCPwd").val("");
-                      $("#txtID").val(json[i].id);
-                      $("#txtFN").val(json[i].profile.firstName);
-                      $("#txtLN").val(json[i].profile.lastName);
-                      $("#txtPwdEdit").val(json[i].password);
-                      $("#txtEmailEdit").val(json[i].email);
-                      $("#editModal").modal('show');
-                    }
-                    else{
-                      return false;
-                    }
-                    });
+                $("img").on('click', function () {
+                  var IdEdit = $(this).attr("id");
+                  if (idCurrentUser == IdEdit) {
+                    $("#noticeEdit").html("");
+                    $("#txtCPwd").val("");
+                    $("#txtID").val(infoUsers.id);
+                    $("#txtFN").val(infoUsers.profile.firstName);
+                    $("#txtLN").val(infoUsers.profile.lastName);
+                    $("#txtPwdEdit").val(infoUsers.password);
+                    $("#txtEmailEdit").val(infoUsers.email);
+                    $("#editModal").modal('show');
+                  } else {
+                    return false;
+                  }
+                });
                 return
               }
-          };
-          notice.html("Wrong username or password");
+            };
+            notice.html("Wrong username or password");
           }
         });
-      //Handle click Logout
+        //Handle click Logout
         $("#btnLogOut").on('click', function () {
           var crm = confirm("Bạn có chắc đăng xuất");
           if (crm) {
-            idCurrentUser=null;
+            idCurrentUser = null;
+            infoUsers = null;
             console.log("Id user after logout : " + idCurrentUser);
             hello.html(`<button id="modalLogin" class="btn btn-primary">Login</button>`);
             showPopupLogin();
@@ -262,8 +259,12 @@
         var txtPwd = $("#txtPwdEdit").val();
         var txtCPwd = $("#txtCPwd").val();
         var txtEmail = $("#txtEmailEdit").val();
+        var hello = $("#message");
         var noticeEdit = $("#noticeEdit");
-        let json=null;
+        var txtID = $("#txtID").val();
+        //console.log("txtID" + txtID);
+        idCurrentUser = txtID;
+        let json = null;
         //Validate data form
         var re = /[0-9]/;
         if (txtFN.length < 4 || re.test(txtFN) || txtLN.length < 4 || re.test(txtLN)) {
@@ -272,18 +273,52 @@
           noticeEdit.html("Password not match matches");
         } else {
           noticeEdit.html("");
-          $.getJSON( "json/users.json", function( data ) {
-            json=data;
-            console.log(json);
-            
-            for(let i = 0 ; i < json.length;++i){
+         
+          let json = null;
+          $.ajax({
+            'async': false,
+            'global': false,
+            'url': "json/users.json",
+            'dataType': "json",
+            'success': function (data) {
+              json = data;
+              for (let i = 0; i < json.length; ++i) {
+                if (idCurrentUser == json[i].id) {
+                  infoUsers = [{
+                    "id": idCurrentUser,
+                    "email": json[i].email,
+                    "password": txtPwd,
+                    "profile": {
+                      "firstName": txtFN,
+                      "lastName": txtLN,
+                      "avatar": json[i].profile.avatar
+                    },
+                    "id": json[i].id,
+                    "email": json[i].email,
+                    "password": json[i].password,
+                    "profile": {
+                      "firstName": json[i].profile.firstName,
+                      "lastName": json[i].profile.lastName,
+                      "avatar": json[i].profile.avatar
+                    }
+                  }]
+                  Cookies.set("info",JSON.stringify(infoUsers))
+                  var c= confirm("Please login again");
+                  if(c){
+                    $("#editModal").modal('hide');     
+                    hello.html(`<button id="modalLogin" class="btn btn-primary">Login</button>`);
+                    showPopupLogin();
+                  }else{
+                    return false; 
+                  }
+                }
+              }
             }
           });
-          localStorage.setItem('users', JSON.stringify(json));
-          var users = JSON.parse(localStorage.users);
-          console.log(users);     
+          
         }
-      //End validate data form
+        
+        //End validate data form
       });
       //End handle edit profile
     });
@@ -330,6 +365,9 @@
         <div class="modal-body">
           <form method="POST" id="my-profile">
             <p id="noticeEdit" class="text-center text-danger"></p>
+            <div class="form-group">
+              <input type="text" class="form-control" name="txtID" id="txtID" readonly>
+            </div>
             <div class="form-group">
               <input type="text" class="form-control" name="txtEmailEdit" id="txtEmailEdit" readonly>
             </div>
