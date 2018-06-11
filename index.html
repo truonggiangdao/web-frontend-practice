@@ -71,7 +71,7 @@
     $(function () {
       idCurrentUser = null;
       infoUsers = null;
-    
+
 
 
       function showPopupLogin() {
@@ -182,16 +182,75 @@
         var hello = $("#message");
         var notice = $("#notice");
         let json = null;
-        $.ajax({
-          'async': false,
-          'global': false,
-          'url': "json/users.json",
-          'dataType': "json",
-          'success': function (data) {
-            json = data;
-            for (let i = 0; i < json.length; ++i) {
+        if (Cookies.get('info')) {
+          var loginValue = JSON.parse(Cookies.get('info'));
+          for (let i = 0; i < loginValue.length; ++i) {
+            infoUsers = {
+              "id": loginValue[i].id,
+              "email": loginValue[i].email,
+              "password": loginValue[i].password,
+              "profile": {
+                "firstName": loginValue[i].profile.firstName,
+                "lastName": loginValue[i].profile.lastName,
+                "avatar": loginValue[i].profile.avatar
+              }
+            }
+
+            if (email == infoUsers.email && pass == infoUsers.password) {
+              idCurrentUser = infoUsers.id;
+              console.log("Id when login : " + idCurrentUser);
+              notice.html("");
+              $("#loginModal").modal("hide");
+              hello.html("<span>Hello, " + loginValue[i].profile.firstName + "</span>" +
+                " <button id='btnLogOut' class='btn btn-warning btn-sm'>Log out</button>");
+              //Check ID user after login and ID of User
+              // if (idCurrentUser == idUserValue){
+              $("img").on('click', function () {
+                var IdEdit = $(this).attr("id");
+                if (idCurrentUser == IdEdit) {
+                  $("#noticeEdit").html("");
+                  $("#txtCPwd").val("");
+                  $("#txtID").val(infoUsers.id);
+                  $("#txtFN").val(infoUsers.profile.firstName);
+                  $("#txtLN").val(infoUsers.profile.lastName);
+                  $("#txtPwdEdit").val(infoUsers.password);
+                  $("#txtEmailEdit").val(infoUsers.email);
+                  $("#editModal").modal('show');
+                } else {
+                  return false;
+                }
+              });
+
+              //Handle click Logout 
+              $("#btnLogOut").on('click', function () {
+                var crm = confirm("Do you want to exit?");
+                if (crm) {
+                  idCurrentUser = null;
+                  infoUsers = null;
+                  console.log("Id user after logout : " + idCurrentUser);
+                  hello.html(`<button id="modalLogin" class="btn btn-primary">Login</button>`);
+                  showPopupLogin();
+                } else {
+                  return false;
+                }
+              });
+              //End handle click Login
+              return
+            }
+          };
+          notice.html("Wrong username or password");
+
+        } else {
+          $.ajax({
+            'async': false,
+            'global': false,
+            'url': "json/users.json",
+            'dataType': "json",
+            'success': function (data) {
+              json = data;
+              for (let i = 0; i < json.length; ++i) {
                 infoUsers = {
-                  "id":  json[i].id,
+                  "id": json[i].id,
                   "email": json[i].email,
                   "password": json[i].password,
                   "profile": {
@@ -200,56 +259,52 @@
                     "avatar": json[i].profile.avatar
                   }
                 }
-                //console.log(infoUsers);
-                
-                //console.log(infoUsers);
-                infoUsers=JSON.parse(Cookies.get("info"))
                 if (email == infoUsers.email && pass == infoUsers.password) {
-                idCurrentUser=infoUsers.id;
-                console.log("Id when login : " + idCurrentUser);
-                notice.html("");
-                $("#loginModal").modal("hide");
-                hello.html("<span>Hello, " + json[i].profile.firstName + "</span>" +
-                  " <button id='btnLogOut' class='btn btn-warning btn-sm'>Log out</button>");
-                //Check ID user after login and ID of User
-                // if (idCurrentUser == idUserValue){
-                $("img").on('click', function () {
-                  var IdEdit = $(this).attr("id");
-                  if (idCurrentUser == IdEdit) {
-                    $("#noticeEdit").html("");
-                    $("#txtCPwd").val("");
-                    $("#txtID").val(infoUsers.id);
-                    $("#txtFN").val(infoUsers.profile.firstName);
-                    $("#txtLN").val(infoUsers.profile.lastName);
-                    $("#txtPwdEdit").val(infoUsers.password);
-                    $("#txtEmailEdit").val(infoUsers.email);
-                    $("#editModal").modal('show');
-                  } else {
-                    return false;
-                  }
-                });
-                return
-              }
-            };
-            notice.html("Wrong username or password");
-          }
-        });
-        //Handle click Logout
-        $("#btnLogOut").on('click', function () {
-          var crm = confirm("Bạn có chắc đăng xuất");
-          if (crm) {
-            idCurrentUser = null;
-            infoUsers = null;
-            console.log("Id user after logout : " + idCurrentUser);
-            hello.html(`<button id="modalLogin" class="btn btn-primary">Login</button>`);
-            showPopupLogin();
-          } else {
-            return false;
-          }
-        });
+                  idCurrentUser = infoUsers.id;
+                  console.log("Id when login : " + idCurrentUser);
+                  notice.html("");
+                  $("#loginModal").modal("hide");
+                  hello.html("<span>Hello, " + json[i].profile.firstName + "</span>" +
+                    " <button id='btnLogOut' class='btn btn-warning btn-sm'>Log out</button>");
+                  //Check ID user after login and ID of User
+                  // if (idCurrentUser == idUserValue){
+                  $("img").on('click', function () {
+                    var IdEdit = $(this).attr("id");
+                    if (idCurrentUser == IdEdit) {
+                      $("#noticeEdit").html("");
+                      $("#txtCPwd").val("");
+                      $("#txtID").val(infoUsers.id);
+                      $("#txtFN").val(infoUsers.profile.firstName);
+                      $("#txtLN").val(infoUsers.profile.lastName);
+                      $("#txtPwdEdit").val(infoUsers.password);
+                      $("#txtEmailEdit").val(infoUsers.email);
+                      $("#editModal").modal('show');
+                    } else {
+                      return false;
+                    }
+                  });
+                  //Handle click Logout 
+                  $("#btnLogOut").on('click', function () {
+                    var crm = confirm("Do you want to exit?");
+                    if (crm) {
+                      idCurrentUser = null;
+                      infoUsers = null;
+                      console.log("Id user after logout : " + idCurrentUser);
+                      hello.html(`<button id="modalLogin" class="btn btn-primary">Login</button>`);
+                      showPopupLogin();
+                    } else {
+                      return false;
+                    }
+                  });
+                  //End handle click Login
+                  return
+                }
+              };
+              notice.html("Wrong username or password");
+            }
+          });
+        }
       });
-      //End handle click Login
-
 
 
       //Handle edit profile
@@ -273,51 +328,62 @@
           noticeEdit.html("Password not match matches");
         } else {
           noticeEdit.html("");
-         
-          let json = null;
-          $.ajax({
-            'async': false,
-            'global': false,
-            'url': "json/users.json",
-            'dataType': "json",
-            'success': function (data) {
-              json = data;
-              for (let i = 0; i < json.length; ++i) {
-                if (idCurrentUser == json[i].id) {
-                  infoUsers = [{
-                    "id": idCurrentUser,
-                    "email": json[i].email,
-                    "password": txtPwd,
-                    "profile": {
-                      "firstName": txtFN,
-                      "lastName": txtLN,
-                      "avatar": json[i].profile.avatar
-                    },
-                    "id": json[i].id,
-                    "email": json[i].email,
-                    "password": json[i].password,
-                    "profile": {
-                      "firstName": json[i].profile.firstName,
-                      "lastName": json[i].profile.lastName,
-                      "avatar": json[i].profile.avatar
-                    }
-                  }]
-                  Cookies.set("info",JSON.stringify(infoUsers))
-                  var c= confirm("Please login again");
-                  if(c){
-                    $("#editModal").modal('hide');     
-                    hello.html(`<button id="modalLogin" class="btn btn-primary">Login</button>`);
-                    showPopupLogin();
-                  }else{
-                    return false; 
+          if (Cookies.get('info')) {
+            var loginUsers = JSON.parse(Cookies.get("info"))
+            for (let i = 0; i < loginUsers.length; ++i) {
+              if (idCurrentUser == loginUsers[i].id) {
+                loginUsers[i].id = loginUsers[i].id
+                loginUsers[i].email = loginUsers[i].email
+                loginUsers[i].password = txtCPwd;
+                loginUsers[i].profile.lastName = txtFN;
+                loginUsers[i].profile.firstName = txtLN;
+                loginUsers[i].profile.avatar = loginUsers[i].profile.avatar;
+
+              }
+              Cookies.set("info", JSON.stringify(loginUsers));
+            }
+            var c = confirm("Please login again");
+            if (c) {
+              $("#editModal").modal('hide');
+              hello.html(`<button id="modalLogin" class="btn btn-primary">Login</button>`);
+              showPopupLogin();
+            } else {
+              return false;
+            }
+            console.log(loginUsers);
+          } else {
+            let json = null;
+            $.ajax({
+              'async': false,
+              'global': false,
+              'url': "json/users.json",
+              'dataType': "json",
+              'success': function (data) {
+                json = data;
+                for (let i = 0; i < json.length; ++i) {
+                  if (idCurrentUser == json[i].id) {
+                    json[i].id = json[i].id
+                    json[i].email = json[i].email
+                    json[i].password = txtCPwd;
+                    json[i].profile.lastName = txtFN;
+                    json[i].profile.firstName = txtLN;
+                    json[i].profile.avatar = json[i].profile.avatar;
+
                   }
+                  Cookies.set("info", JSON.stringify(json));
+                }
+                var c = confirm("Please login again");
+                if (c) {
+                  $("#editModal").modal('hide');
+                  hello.html(`<button id="modalLogin" class="btn btn-primary">Login</button>`);
+                  showPopupLogin();
+                } else {
+                  return false;
                 }
               }
-            }
-          });
-          
+            });
+          }
         }
-        
         //End validate data form
       });
       //End handle edit profile
